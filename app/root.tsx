@@ -47,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  const { contacts }: any = useLoaderData();
+  const { contacts } = useLoaderData<typeof loader>();
 
   return (
     <div>
