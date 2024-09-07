@@ -5,15 +5,27 @@ import {
   Scripts,
   Link,
   ScrollRestoration,
+  useLoaderData,
 } from "@remix-run/react";
 import "./tailwind.css";
 import type { LinksFunction } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => {
   return [
     { rel: "stylesheet", href: "app/styles/global.css" },
     { rel: "stylesheet", href: "app/styles/index.css" },
   ];
+};
+
+// existing imports
+import { getContacts } from "./data.ts";
+
+// existing exports
+
+export const loader = async () => {
+  const contacts = await getContacts();
+  return json({ contacts });
 };
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -35,18 +47,35 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { contacts }: any = useLoaderData();
+
   return (
     <div>
       <div id="sidebar">
+        {/* other elements */}
         <nav>
-          <ul>
-            <li>
-              <Link to={`/contacts/1`}>Your Name</Link>
-            </li>
-            <li>
-              <Link to={`/contacts/2`}>Your Friend</Link>
-            </li>
-          </ul>
+          {contacts.length ? (
+            <ul>
+              {contacts.map((contact) => (
+                <li key={contact.id}>
+                  <Link to={`contacts/${contact.id}`}>
+                    {contact.first || contact.last ? (
+                      <>
+                        {contact.first} {contact.last}
+                      </>
+                    ) : (
+                      <i>No Name</i>
+                    )}{" "}
+                    {contact.favorite ? <span>★</span> : null}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>
+              <i>No contacts</i>
+            </p>
+          )}
         </nav>
       </div>
       <div id="detail">
