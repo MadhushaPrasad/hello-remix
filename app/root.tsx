@@ -13,8 +13,8 @@ import { json } from "@remix-run/node";
 
 export const links: LinksFunction = () => {
   return [
-    { rel: "stylesheet", href: "app/styles/global.css" },
-    { rel: "stylesheet", href: "app/styles/index.css" },
+    { rel: "stylesheet", href: "./app/styles/global.css" },
+    { rel: "stylesheet", href: "./app/styles/index.css" },
   ];
 };
 
